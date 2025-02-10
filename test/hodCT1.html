@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timetable Management</title>
+    <link rel="stylesheet" href="styles8.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+      <h2>Manage Timetable</h2>
+
+      <!-- Add Class & Cancel Buttons -->
+      <div class="add-class-container">
+        <button class="add-class-btn">
+          Add Class
+          <img src="plus.png" alt="Add" class="button-icon right" />
+        </button>
+      </div>
+
+      <!-- Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Subject</th>
+            <th>Faculty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Monday</td>
+            <td>9:00 AM - 10:00 AM</td>
+            <td contenteditable="true">Enter Subject</td>
+            <td contenteditable="true">Enter Faculty</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Footer Buttons -->
+      <div class="footer">
+        <button class="back-btn">
+          <img src="back.png" alt="Back" class="button-icon left" />
+          Back
+        </button>
+        <button class="save-btn">
+          Save
+          <img src="save.png" alt="Save" class="button-icon right" />
+        </button>
+      </div>
+    </div>
+  </body>
+</html>

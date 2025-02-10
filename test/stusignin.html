@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Sign Up</title>
+    <link rel="icon" href="pic.png" type="image/png" />
+    <link rel="stylesheet" href="styles3.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo Icon" class="logo-icon" />
+        <span>TimePrompt</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </nav>
+    </header>
+    <div class="login-container">
+      <img src="admin.png" alt="Admin Icon" class="login-image" />
+      <h2>Sign Up</h2>
+      <form action="#" method="POST">
+        <div class="input-group">
+          <label for="name">Enter your full name:</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Full Name"
+            required
+          />
+        </div>
+        <div class="input-group">
+          <label for="rollnumber">Enter your roll number:</label>
+          <input
+            type="text"
+            name="rollnumber"
+            id="rollnumber"
+            placeholder="Roll Number"
+            required
+          />
+        </div>
+        <div class="input-group">
+          <label for="email">Enter your email:</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Email"
+            required
+          />
+        </div>
+        <div class="input-group">
+          <label for="semester">Select Semester:</label>
+          <select name="semester" id="semester" required>
+            <option value="">--Select Semester--</option>
+            <option value="1">Semester 1-1</option>
+            <option value="2">Semester 1-2</option>
+            <option value="3">Semester 2-1</option>
+            <option value="4">Semester 2-2</option>
+            <option value="5">Semester 3-1</option>
+            <option value="6">Semester 3-2</option>
+            <option value="7">Semester 4-1</option>
+            <option value="8">Semester 4-2</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="class">Select Section:</label>
+          <select name="class" id="class" required>
+            <option value="">--Select Class--</option>
+            <option value="A">Regular</option>
+            <option value="B">IDP</option>
+            <option value="C">IDDMP</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="department">Select Department:</label>
+          <select name="department" id="department" required>
+            <option value="">--Select Department--</option>
+            <option value="CSE">Computer Science</option>
+            <option value="ECE">Electronics & Communication</option>
+            <option value="ME">Mechanical Engineering</option>
+            <option value="EE">Electrical Engineering</option>
+            <option value="CE">Civil Engineering</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="password">Create a password:</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+        <div class="input-group">
+          <label for="confirm-password">Confirm your password:</label>
+          <input
+            type="password"
+            name="confirm-password"
+            id="confirm-password"
+            placeholder="Confirm Password"
+            required
+          />
+        </div>
+        <button type="submit">
+          <span>Sign Up</span>
+          <img src="signin.png" alt="Sign In Icon" class="signin-image" />
+        </button>
+      </form>
+      <div class="already-registered">
+        <br />
+        <p>Already have an account? <a href="#">Login</a></p>
+      </div>
+    </div>
+  </body>
+</html>
