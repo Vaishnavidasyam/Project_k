@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enter Class Details</title>
+    <link rel="stylesheet" href="styles7.css" />
+    <style>
+      /* Adjust form container styles */
+      .container {
+        max-width: 400px;
+        margin: auto;
+      }
+      /* Style the buttons */
+      .form-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      .form-buttons button {
+        padding: 10px 20px;
+        font-size: 1em;
+      }
+      .cancel-btn {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+      }
+      .ok-btn {
+        background-color: #28a745; /* green */
+        border: none;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h2>Enter Class Details</h2>
+      <form id="classForm">
+        <label for="subject">Subject</label>
+        <select id="subject" required>
+          <option value="">Select Subject</option>
+          <option value="Math">Math</option>
+          <option value="Science">Science</option>
+        </select>
+
+        <label for="staff">Faculty</label>
+        <select id="staff" required>
+          <option value="">Select Faculty</option>
+          <option value="Mr. Smith">Mr. Smith</option>
+          <option value="Ms. Johnson">Ms. Johnson</option>
+        </select>
+
+        <label for="day">Day</label>
+        <select id="day" required>
+          <option value="">Select Day</option>
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <!-- Add more days as needed -->
+        </select>
+
+        <label for="time">Time Slot</label>
+        <select id="time" required>
+          <option value="">Select Time Slot</option>
+          <option value="9:45 AM - 11:00 AM">9:45 AM - 11:00 AM</option>
+          <option value="11:00 AM - 12:30 PM">11:00 AM - 12:30 PM</option>
+          <option value="1:45 PM - 3:15 PM">1:45 PM - 3:15 PM</option>
+          <option value="3:15 PM - 4:45 PM">3:15 PM - 4:45 PM</option>
+        </select>
+
+        <div class="form-buttons">
+          <button type="button" class="cancel-btn" onclick="window.history.back()">
+            Cancel <img src="cancel.png" alt="Cancel Icon" class="btn-icon" />
+          </button>
+          <button type="submit" class="ok-btn">
+            OK <img src="ok.png" alt="OK Icon" class="btn-icon" />
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      // Utility: Get classes array from localStorage (or empty array)
+      function getClasses() {
+        return JSON.parse(localStorage.getItem("classes")) || [];
+      }
+
+      document.getElementById('classForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        
+        // Get values from form fields
+        const subject = document.getElementById('subject').value;
+        const staff = document.getElementById('staff').value;
+        const day = document.getElementById('day').value;
+        const time = document.getElementById('time').value;
+        
+        // Validate all fields are filled
+        if (!subject || !staff || !day || !time) {
+          alert('Please fill all the details.');
+          return;
+        }
+        
+        // Check if a class with the same day and time slot already exists
+        const classes = getClasses();
+        const duplicate = classes.find(cls => cls.day === day && cls.time === time);
+        if (duplicate) {
+          alert('Error: A class is already scheduled for that day and time slot.');
+          return;
+        }
+        
+        // Create query parameters with the details
+        const queryParams = new URLSearchParams({
+          subject: subject,
+          faculty: staff,
+          day: day,
+          time: time
+        });
+        
+        // Redirect back to hodCT1.html with query parameters
+        window.location.href = 'hodCT1.html?' + queryParams.toString();
+      });
+    </script>
+  </body>
+</html>

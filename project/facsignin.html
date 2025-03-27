@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faculty Sign Up</title>
+    <!-- Favicon -->
+    <link rel="icon" href="pic.png" type="image/png" />
+    <link rel="stylesheet" href="styles3.css" />
+    <script>
+      // JavaScript to validate the sign-up form
+      function validateSignupForm(event) {
+        event.preventDefault(); // Prevent default form submission
+        var name = document.getElementById("name").value;
+        var email = document.getElementById("email").value;
+        var department = document.getElementById("department").value;
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirm-password").value;
+
+        // Check if any field is empty
+        if (
+          name === "" ||
+          email === "" ||
+          department === "" ||
+          password === "" ||
+          confirmPassword === ""
+        ) {
+          alert("Please fill in all the fields.");
+          return false;
+        }
+
+        // Check if password and confirm password match
+        if (password !== confirmPassword) {
+          alert("Passwords do not match.");
+          return false;
+        }
+
+        // If everything is okay, redirect to staff1.html (Dashboard)
+        window.location.href = "staff1.html";
+        return false;
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- Header Section -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo Icon" class="logo-icon" />
+        <span>TimePrompt</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </nav>
+    </header>
+
+    <div class="login-container">
+      <!-- Image Above Sign Up Text -->
+      <img src="admin.png" alt="Admin Icon" class="login-image" />
+      <h2>Sign Up</h2>
+      <form onsubmit="validateSignupForm(event)">
+        <!-- Name Field -->
+        <div class="input-group">
+          <label for="name">Enter your full name:</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Full Name"
+            required
+          />
+        </div>
+
+        <!-- Email Field -->
+        <div class="input-group">
+          <label for="email">Enter your email:</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Email"
+            required
+          />
+        </div>
+
+        <!-- Department Field (Dropdown) -->
+        <div class="input-group">
+          <label for="department">Select your department:</label>
+          <select name="department" id="department" required>
+            <option value="" disabled selected>Choose Department</option>
+            <option value="cse">Computer Science & Engineering</option>
+            <option value="ece">Electronics & Communication Engineering</option>
+            <option value="eee">Electrical & Electronics Engineering</option>
+            <option value="mech">Mechanical Engineering</option>
+            <option value="civil">Civil Engineering</option>
+            <option value="it">Information Technology</option>
+          </select>
+        </div>
+        <!-- Password Field -->
+        <div class="input-group">
+          <label for="password">Create a password:</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="input-group">
+          <label for="confirm-password">Confirm your password:</label>
+          <input
+            type="password"
+            name="confirm-password"
+            id="confirm-password"
+            placeholder="Confirm Password"
+            required
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit">
+          <span>Sign Up</span>
+          <img src="signin.png" alt="Sign In Icon" class="signin-image" />
+        </button>
+      </form>
+
+      <div class="already-registered">
+        <p>Already have an account? <a href="#">Login</a></p>
+      </div>
+    </div>
+  </body>
+</html>

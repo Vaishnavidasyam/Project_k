@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timetable Management</title>
+    <link rel="stylesheet" href="styles8.css" />
+    <style>
+      /* Inline style for blue delete button text */
+      .delete-btn {
+        background: none;
+        border: none;
+        color: rgb(255, 0, 0);
+        cursor: pointer;
+        font-size: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h2>Manage Timetable</h2>
+      
+      <!-- Add Class Button -->
+      <div class="add-class-container">
+        <button class="add-class-btn" onclick="window.location.href='hodCT2.html'">
+          Add Class
+          <img src="plus.png" alt="Plus Icon" class="button-icon right" />
+        </button>
+      </div>
+      
+      <!-- Empty Table -->
+      <table id="timetable">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Subject</th>
+            <th>Faculty</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Rows will be appended here -->
+        </tbody>
+      </table>
+      
+      <div class="footer">
+        <button class="back-btn" onclick="window.history.back()">
+          <img src="back.png" alt="Back Icon" class="button-icon left" />
+          Back
+        </button>
+        <button class="save-btn">
+          Save
+          <img src="save.png" alt="Save Icon" class="button-icon right" />
+        </button>
+      </div>
+    </div>
+    
+    <script>
+      // Get the classes array from localStorage, or initialize as empty array
+      function getClasses() {
+        return JSON.parse(localStorage.getItem("classes")) || [];
+      }
+      
+      // Save the classes array to localStorage
+      function saveClasses(classes) {
+        localStorage.setItem("classes", JSON.stringify(classes));
+      }
+      
+      // Render the timetable rows from the classes array
+      function renderTable() {
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = ""; // clear existing rows
+        const classes = getClasses();
+        classes.forEach((cls, index) => {
+          const row = document.createElement("tr");
+          
+          const dayCell = document.createElement("td");
+          dayCell.textContent = cls.day;
+          
+          const timeCell = document.createElement("td");
+          timeCell.textContent = cls.time;
+          
+          const subjectCell = document.createElement("td");
+          subjectCell.textContent = cls.subject;
+          
+          const facultyCell = document.createElement("td");
+          facultyCell.textContent = cls.faculty;
+          
+          const actionCell = document.createElement("td");
+          const deleteBtn = document.createElement("button");
+          deleteBtn.className = "delete-btn";
+          deleteBtn.textContent = "Delete";
+          deleteBtn.onclick = function () {
+            deleteRow(index);
+          };
+          actionCell.appendChild(deleteBtn);
+          
+          row.appendChild(dayCell);
+          row.appendChild(timeCell);
+          row.appendChild(subjectCell);
+          row.appendChild(facultyCell);
+          row.appendChild(actionCell);
+          
+          tbody.appendChild(row);
+        });
+      }
+      
+      // Delete a row from localStorage and re-render the table
+      function deleteRow(index) {
+        let classes = getClasses();
+        classes.splice(index, 1);
+        saveClasses(classes);
+        renderTable();
+      }
+      
+      // Check for query parameters from hodCT2.html
+      function processQueryParameters() {
+        const params = new URLSearchParams(window.location.search);
+        const day = params.get('day');
+        const time = params.get('time');
+        const subject = params.get('subject');
+        const faculty = params.get('faculty');
+        
+        if (day && time && subject && faculty) {
+          // Add new class to localStorage if not already present (optional duplicate check here)
+          let classes = getClasses();
+          classes.push({ day, time, subject, faculty });
+          saveClasses(classes);
+          // Clear the query parameters from the URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+      
+      // On page load, process query parameters and render the table
+      window.addEventListener("DOMContentLoaded", function () {
+        processQueryParameters();
+        renderTable();
+      });
+    </script>
+  </body>
+</html>
