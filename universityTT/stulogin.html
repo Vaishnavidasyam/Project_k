@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Login Page</title>
+    <link rel="icon" href="pic.png" type="image/png" />
+    <link rel="stylesheet" href="styles3.css" />
+  </head>
+
+  <body>
+
+    <form method="post" action="stulogin.php">
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo Icon" class="logo-icon" />
+        <span>TimePrompt</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </nav>
+    </header>
+
+    <div class="login-container">
+      <img src="admin.png" alt="Admin Icon" class="login-image" />
+      <h2>Login</h2>
+      <form id="loginForm" action="#" method="POST" onsubmit="return validateLoginForm()">
+        <div class="input-group">
+          
+            <input type="hidden" name="role" value="student" />
+            <label for="rollnumber">Enter your roll number:</label>
+            <input type="text" name="rollnumber" id="rollnumber" placeholder="Roll Number" required />
+        </div>
+        <div class="input-group">
+          <label for="password">Enter your password:</label>
+          <input type="password" name="password" id="password" placeholder="Password" required />
+        </div>
+        <button type="submit">
+          <span>Login</span>
+          <img src="signin.png" alt="Sign In Icon" class="signin-image" />
+        </button>
+      </form>
+      <div class="forgot-password">
+        <a href="#">Forgot Password?</a>
+      </div>
+    </div>
+
+    <script>
+      function validateLoginForm() {
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        // Check if all fields are filled
+        if (email === "" || password === "") {
+          alert("Please fill in all fields.");
+          return false;
+        }
+
+        // Redirect to the student home page on successful login
+        window.location.href = "stuTT.html"; // Link to student home page (Code 3)
+        return false;
+      }
+    </script>
+  </body>
+</html>

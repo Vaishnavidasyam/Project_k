@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Provisional Time-Table</title>
+    <link rel="stylesheet" href="styles5.css" />
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetchTimetable();
+      });
+
+      function fetchTimetable() {
+        fetch("load_timetable.php")
+          .then((response) => response.json())
+          .then((data) => {
+            const timetable = data.timetable;
+            const subjects = data.subjects;
+            const faculty = data.faculty;
+
+            // Populate Timetable
+            timetable.forEach((entry) => {
+              const cell = document.getElementById(
+                `${entry.day}_${entry.time}`
+              );
+              if (cell) {
+                cell.textContent = `${entry.subject} (${entry.faculty})`;
+              }
+            });
+
+            // Populate Subjects List
+            const subjectList = document.getElementById("subject-list");
+            subjects.forEach((subject) => {
+              const li = document.createElement("li");
+              li.textContent = subject;
+              subjectList.appendChild(li);
+            });
+
+            // Populate Faculty List
+            const facultyList = document.getElementById("faculty-list");
+            faculty.forEach((facultyName) => {
+              const li = document.createElement("li");
+              li.textContent = facultyName;
+              facultyList.appendChild(li);
+            });
+          })
+          .catch((error) => console.error("Error loading timetable:", error));
+      }
+    </script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1>JNTUH COLLEGE OF ENGINEERING HYDERABAD</h1>
+      <h2>Dept of Computer Science and Engineering</h2>
+      <h3>B.Tech. III-Year (Section - ) (-Semester)</h3>
+      <h4>PROVISIONAL TIME-TABLE</h4>
+      <p><strong>Semester Commences From: 06/01/2025</strong></p>
+
+      <!-- Timetable Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>DAY</th>
+            <th>09:30AM - 11:00AM</th>
+            <th>11:00AM - 12:30PM</th>
+            <th>01:45PM - 03:15PM</th>
+            <th>03:15PM - 04:45PM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>MONDAY</td>
+            <td id="MONDAY_09:30"></td>
+            <td id="MONDAY_11:00"></td>
+            <td id="MONDAY_01:45"></td>
+            <td id="MONDAY_03:15"></td>
+          </tr>
+          <tr>
+            <td>TUESDAY</td>
+            <td id="TUESDAY_09:30"></td>
+            <td id="TUESDAY_11:00"></td>
+            <td id="TUESDAY_01:45"></td>
+            <td id="TUESDAY_03:15"></td>
+          </tr>
+          <tr>
+            <td>WEDNESDAY</td>
+            <td id="WEDNESDAY_09:30"></td>
+            <td id="WEDNESDAY_11:00"></td>
+            <td id="WEDNESDAY_01:45"></td>
+            <td id="WEDNESDAY_03:15"></td>
+          </tr>
+          <tr>
+            <td>THURSDAY</td>
+            <td id="THURSDAY_09:30"></td>
+            <td id="THURSDAY_11:00"></td>
+            <td id="THURSDAY_01:45"></td>
+            <td id="THURSDAY_03:15"></td>
+          </tr>
+          <tr>
+            <td>FRIDAY</td>
+            <td id="FRIDAY_09:30"></td>
+            <td id="FRIDAY_11:00"></td>
+            <td id="FRIDAY_01:45"></td>
+            <td id="FRIDAY_03:15"></td>
+          </tr>
+          <tr>
+            <td>SATURDAY</td>
+            <td id="SATURDAY_09:30"></td>
+            <td id="SATURDAY_11:00"></td>
+            <td id="SATURDAY_01:45"></td>
+            <td>.....</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="columns">
+        <div class="column">
+          <h5><strong>Name of the Subjects</strong></h5>
+          <ol id="subject-list"></ol>
+        </div>
+        <div class="column">
+          <h5><strong>Name of the Faculty</strong></h5>
+          <ul id="faculty-list"></ul>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>Head, CSE Dept.</p>
+        <p>K. K.</p>
+      </div>
+    </div>
+  </body>
+</html>
