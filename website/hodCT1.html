@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timetable Management</title>
+    <link rel="stylesheet" href="styles8.css" />
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="buttons-container">
+        <!-- Add Subject Button (Left) -->
+        <button class="add-btn left-btn" onclick="openAddSubjectPopup()">
+          Add Subject
+          <img src="plus.png" alt="Plus Icon" class="button-icon right" />
+        </button>
+
+        <h2>Manage Timetable</h2>
+
+        <!-- Add Class Button (Right) -->
+        <button
+          class="add-btn right-btn"
+          onclick="window.location.href='hodCT2.html'"
+        >
+          Add Class
+          <img src="plus.png" alt="Plus Icon" class="button-icon right" />
+        </button>
+      </div>
+
+      <!-- Add Subject Popup -->
+      <div id="addSubjectPopup" class="popup-overlay">
+        <div class="popup-content">
+          <h3>Add New Subject</h3>
+          <input
+            type="text"
+            id="subjectName"
+            placeholder="Enter Subject Name"
+            class="popup-input"
+          />
+          <div class="popup-buttons">
+            <button onclick="saveSubject()" class="popup-save-btn">Save</button>
+            <button onclick="closeAddSubjectPopup()" class="popup-cancel-btn">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timetable Table -->
+      <table id="timetable">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Subject</th>
+            <th>Faculty</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Rows are appended dynamically -->
+        </tbody>
+      </table>
+
+      <!-- Footer -->
+      <div class="footer">
+        <button class="back-btn" onclick="window.history.back()">
+          <img src="back.png" alt="Back Icon" class="button-icon left" />
+          Back
+        </button>
+        <button class="view-btn" onclick="window.location.href='hodCT3.html'">
+          View Timetable
+          <img src="signin.png" alt="View Icon" class="button-icon right" />
+        </button>
+        <button class="save-btn">Save</button>
+      </div>
+    </div>
+
+    <script>
+      // Open & Close Add Subject Popup
+      function openAddSubjectPopup() {
+        document.getElementById("addSubjectPopup").style.display = "flex";
+      }
+
+      function closeAddSubjectPopup() {
+        document.getElementById("addSubjectPopup").style.display = "none";
+      }
+
+      // Save Subject to Database
+      function saveSubject() {
+        const subjectName = document.getElementById("subjectName").value.trim();
+
+        if (subjectName) {
+          const formData = new FormData();
+          formData.append("subjectName", subjectName);
+
+          fetch("save_subject.php", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              alert(data);
+              closeAddSubjectPopup();
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Failed to save subject.");
+            });
+        } else {
+          alert("Please enter a subject name!");
+        }
+      }
+    </script>
+  </body>
+</html>
