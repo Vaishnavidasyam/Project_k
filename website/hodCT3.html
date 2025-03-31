@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Provisional Time-Table</title>
+    <link rel="stylesheet" href="styles5.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+      <h1>JNTUH COLLEGE OF ENGINEERING HYDERABAD</h1>
+      <h2>Dept of Computer Science and Engineering</h2>
+      <h3>B.Tech. III-Year (Section - ) (-Semester)</h3>
+      <h4>PROVISIONAL TIME-TABLE</h4>
+      <p><strong>Semester Commences From: 06/01/2025</strong></p>
+
+      <!-- Timetable Table -->
+      <table id="timetable">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>9:30 AM - 11:00 AM</th>
+            <th>11:00 AM - 12:30 PM</th>
+            <th>1:45 PM - 3:15 PM</th>
+            <th>3:15 PM - 4:45 PM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Monday</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Tuesday</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Wednesday</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Thursday</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Friday</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Saturday</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Subjects and Faculty List -->
+      <div class="columns">
+        <div class="column">
+          <h5><strong>Name of the Subjects</strong></h5>
+          <ol>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ol>
+        </div>
+        <div class="column">
+          <h5><strong>Name of the Faculty</strong></h5>
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>Head, CSE Dept.</p>
+        <p>K. K.</p>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("fetch_timetable.php")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Fetched Data:", data);
+
+            if (!Array.isArray(data) || data.length === 0) {
+              console.error("No data received from database.");
+              return;
+            }
+
+            // Define mappings
+            const days = [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+            ];
+            const timeSlots = [
+              "9:30 AM - 11:00 AM",
+              "11:00 AM - 12:30 PM",
+              "1:45 PM - 3:15 PM",
+              "3:15 PM - 4:45 PM",
+            ];
+
+            // Get table rows
+            const rows = document.querySelectorAll("#timetable tbody tr");
+
+            // Get subject and faculty list containers
+            const subjectList = document.querySelector(".column ol");
+            const facultyList = document.querySelector(".column ul");
+
+            // Clear previous data
+            subjectList.innerHTML = "";
+            facultyList.innerHTML = "";
+
+            let subjectSet = new Set(); // Unique subjects
+            let facultySet = new Set(); // Unique faculty names
+
+            data.forEach((entry) => {
+              const dayIndex = days.indexOf(entry.day.trim());
+              const timeIndex = timeSlots.indexOf(entry.time.trim());
+
+              if (dayIndex !== -1 && timeIndex !== -1) {
+                // Update timetable cell
+                rows[dayIndex].cells[timeIndex + 1].innerText = entry.subject;
+
+                // Store unique subjects and faculty names
+                subjectSet.add(entry.subject);
+                facultySet.add(entry.faculty);
+              }
+            });
+
+            // Populate unique subjects in the list
+            subjectSet.forEach((subject) => {
+              let li = document.createElement("li");
+              li.innerText = subject;
+              subjectList.appendChild(li);
+            });
+
+            // Populate unique faculty names in the list
+            facultySet.forEach((faculty) => {
+              let li = document.createElement("li");
+              li.innerText = faculty;
+              facultyList.appendChild(li);
+            });
+          })
+          .catch((error) => console.error("Error fetching timetable:", error));
+      });
+    </script>
+  </body>
+</html>
