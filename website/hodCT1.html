@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timetable Management</title>
+    <link rel="stylesheet" href="styles8.css" />
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="buttons-container">
+        <button class="add-btn left-btn" onclick="openAddSubjectPopup()">
+          Add Subject
+          <img src="plus.png" alt="Plus Icon" class="button-icon right" />
+        </button>
+
+        <h2>Manage Timetable</h2>
+        <button class="add-btn right-btn" onclick="goToCT2()">
+          Add Class
+          <img src="plus.png" alt="Plus Icon" class="button-icon right" />
+        </button>
+      </div>
+
+      <!-- Add Subject Popup -->
+      <div id="addSubjectPopup" class="popup-overlay">
+        <input type="hidden" id="popupSemester" />
+        <input type="hidden" id="popupSection" />
+
+        <div class="popup-content">
+          <h3>Add New Subject</h3>
+          <input
+            type="text"
+            id="subjectName"
+            placeholder="Enter Subject Name"
+            class="popup-input"
+          />
+          <div class="popup-buttons">
+            <button onclick="saveSubject()" class="popup-save-btn">Save</button>
+            <button onclick="closeAddSubjectPopup()" class="popup-cancel-btn">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timetable Table -->
+      <table id="timetable">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Subject</th>
+            <th>Faculty</th>
+            <th>Room</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+
+      <div class="footer">
+        <button class="back-btn" onclick="window.history.back()">
+          <img src="back.png" alt="Back Icon" class="button-icon left" />
+          Back</button
+        ><button class="view-btn" onclick="goToCT3()">
+          View Timetable
+          <img src="signin.png" alt="View Icon" class="button-icon right" />
+        </button>
+        <button class="save-btn" onclick="saveTimetable()">Save</button>
+      </div>
+    </div>
+
+    <script>
+      function openAddSubjectPopup() {
+        document.getElementById("addSubjectPopup").style.display = "flex";
+      }
+
+      function closeAddSubjectPopup() {
+        document.getElementById("addSubjectPopup").style.display = "none";
+      }
+      function saveSubject() {
+        const subjectName = document.getElementById("subjectName").value.trim();
+        const semester = document.getElementById("popupSemester").value;
+        const section = document.getElementById("popupSection").value;
+
+        if (!subjectName) {
+          alert("Please enter a subject name!");
+          return;
+        }
+
+        fetch("save_subject.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            subject_name: subjectName,
+            semester,
+            section,
+          }),
+        })
+          .then((response) => response.text())
+          .then((data) => {
+            alert(data);
+            closeAddSubjectPopup();
+            loadTimetable();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Failed to save subject.");
+          });
+      }
+      function loadTimetable() {
+        const { semester, section } = getQueryParams();
+
+        fetch(
+          `fetch_classes.php?semester=${encodeURIComponent(
+            semester
+          )}&section=${encodeURIComponent(section)}`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            const tableBody = document.getElementById("tableBody");
+            tableBody.innerHTML = "";
+
+            data.forEach((row) => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+                <td>${row.day}</td>
+                <td>${row.time}</td>
+                <td>${row.subject}</td>
+                <td>${row.faculty}</td>
+                <td>${row.room}</td>
+                <td><button onclick="deleteClass(${row.id})">🗑️</button></td>
+              `;
+              tableBody.appendChild(tr);
+            });
+          })
+          .catch((error) => console.error("Error fetching classes:", error));
+      }
+      function deleteClass(id) {
+        if (!confirm("Are you sure you want to delete this row?")) return;
+
+        console.log("Deleting row with ID:", id); // Debugging line
+
+        fetch("delete_class.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: id }), // Sending id as JSON
+        })
+          .then((response) => response.text())
+          .then((data) => {
+            console.log("Server Response:", data); // Debugging line
+            alert(data);
+            loadTimetable(); // Refresh the table after deletion
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+      function saveTimetable() {
+        const tableRows = document.querySelectorAll("#tableBody tr");
+        let timetableData = [];
+
+        tableRows.forEach((row) => {
+          const columns = row.querySelectorAll("td");
+          if (columns.length >= 5) {
+            let rowData = {
+              day: columns[0].innerText,
+              time: columns[1].innerText,
+              subject: columns[2].innerText,
+              faculty: columns[3].innerText,
+              room: columns[4].innerText, // NEW: Room
+            };
+            timetableData.push(rowData);
+          }
+        });
+
+        if (timetableData.length === 0) {
+          alert("No valid timetable data found!");
+          return;
+        }
+
+        const { semester, section } = getQueryParams();
+
+        fetch("save_timetable.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            semester: semester,
+            section: section,
+            timetable: timetableData,
+          }),
+        })
+          .then((response) => response.text())
+          .then((data) => alert(data))
+          .catch((error) => console.error("Error saving timetable:", error));
+      }
+
+      // Extract query parameters from URL
+      function getQueryParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return {
+          semester: urlParams.get("semester"),
+          section: urlParams.get("section"),
+        };
+      }
+
+      // Display selected semester and section dynamically
+      function displaySelectionInfo() {
+        const { semester, section } = getQueryParams();
+        const titleElement = document.createElement("h3");
+        titleElement.textContent = `Semester: ${semester} | Section: ${section}`;
+        document
+          .querySelector(".container")
+          .insertBefore(
+            titleElement,
+            document.querySelector(".buttons-container")
+          );
+      }
+
+      window.onload = function () {
+        displaySelectionInfo();
+        loadTimetable();
+      };
+      function openAddSubjectPopup() {
+        const { semester, section } = getQueryParams();
+        document.getElementById("popupSemester").value = semester;
+        document.getElementById("popupSection").value = section;
+        document.getElementById("addSubjectPopup").style.display = "flex";
+      }
+      function goToCT2() {
+        const { semester, section } = getQueryParams();
+        window.location.href =
+          "hodCT2.html?semester=" +
+          encodeURIComponent(semester) +
+          "&section=" +
+          encodeURIComponent(section);
+      }
+      function goToCT3() {
+        const { semester, section } = getQueryParams();
+        window.location.href =
+          "hodCT3.html?semester=" +
+          encodeURIComponent(semester) +
+          "&section=" +
+          encodeURIComponent(section);
+      }
+    </script>
+  </body>
+</html>
