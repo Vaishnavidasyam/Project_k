@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timetable Selection</title>
+    <link rel="stylesheet" href="styles6.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+      <div class="form-box">
+        <h2>Select Details for Timetable</h2>
+        <form id="timetableForm">
+          <div class="form-group">
+            <label for="semester">Semester</label>
+            <select id="semester" required>
+              <option value="">Select semester</option>
+              <option value="1-1">1-1</option>
+              <option value="1-2">1-2</option>
+              <option value="2-1">2-1</option>
+              <option value="2-2">2-2</option>
+              <option value="3-1">3-1</option>
+              <option value="3-2">3-2</option>
+              <option value="4-1">4-1</option>
+              <option value="4-2">4-2</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="class">Section</label>
+            <select id="class" required>
+              <option value="">Select section</option>
+              <option value="Regular">Regular</option>
+              <option value="IDP">IDP</option>
+              <option value="IDDMP">IDDMP</option>
+            </select>
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="cancel-btn">
+              Cancel <img src="cancel.png" alt="Cancel Icon" class="btn-icon" />
+            </button>
+            <button type="submit" class="next-btn">
+              Next <img src="signin.png" alt="Next Icon" class="btn-icon" />
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("name");
+      const roll = params.get("rollnumber");
+
+      // Debug logs (optional)
+      console.log("Student Name:", name);
+      console.log("Roll Number:", roll);
+
+      document
+        .getElementById("timetableForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault(); // prevent default form submission
+
+          const semester = document.getElementById("semester").value;
+          const section = document.getElementById("class").value;
+
+          if (semester && section) {
+            const url = `hodct3.html?semester=${encodeURIComponent(
+              semester
+            )}&section=${encodeURIComponent(section)}&name=${encodeURIComponent(
+              name
+            )}&rollnumber=${encodeURIComponent(roll)}`;
+            window.location.href = url;
+          } else {
+            alert("Please select both Semester and Section.");
+          }
+        });
+    </script>
+  </body>
+</html>
