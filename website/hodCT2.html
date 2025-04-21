@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enter Class Details</title>
+    <link rel="stylesheet" href="styles7.css" />
+    <style>
+      .container {
+        max-width: 400px;
+        margin: auto;
+      }
+      .form-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      .form-buttons button {
+        padding: 10px 20px;
+        font-size: 1em;
+      }
+      .cancel-btn {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+      }
+      .ok-btn {
+        background-color: #28a745;
+        border: none;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h2>Enter Class Details</h2>
+
+      <form id="classForm">
+        <label for="day">Day</label>
+        <select id="day" name="day" required>
+          <option value="">Select Day</option>
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option>
+          <option value="Friday">Friday</option>
+          <option value="Saturday">Saturday</option>
+        </select>
+
+        <label for="time">Time Slot</label>
+        <select id="time" name="time" required>
+          <option value="">Select Time Slot</option>
+          <option value="9:30 AM - 11:00 AM">9:30 AM - 11:00 AM</option>
+          <option value="11:00 AM - 12:30 PM">11:00 AM - 12:30 PM</option>
+          <option value="1:45 PM - 3:15 PM">1:45 PM - 3:15 PM</option>
+          <option value="3:15 PM - 4:45 PM">3:15 PM - 4:45 PM</option>
+        </select>
+
+        <label for="subject">Subject</label>
+        <select id="subject" name="subject" required>
+          <option value="">Select Subject</option>
+        </select>
+
+        <label for="faculty">Faculty</label>
+        <select id="faculty" name="faculty" required>
+          <option value="">Select Faculty</option>
+        </select>
+
+        <label for="room">Room</label>
+        <select id="room" name="room" required>
+          <option value="">Select Room</option>
+          <option value="Room G2">Room G2</option>
+          <option value="Room G5">Room G5</option>
+          <option value="Room 118">Room 118</option>
+          <option value="Room 119">Room 119</option>
+          <option value="Room 206">Room 206</option>
+          <option value="Room 208">Room 208</option>
+          <option value="Room 209">Room 209</option>
+        </select>
+
+        <div class="form-buttons">
+          <button
+            type="button"
+            class="cancel-btn"
+            onclick="window.history.back()"
+          >
+            Cancel <img src="cancel.png" alt="Cancel Icon" class="btn-icon" />
+          </button>
+          <button type="submit" class="ok-btn">
+            OK <img src="ok.png" alt="OK Icon" class="btn-icon" />
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      window.onload = function () {
+        const { semester, section } = getQueryParams();
+        loadSubjects(semester);
+        loadFaculty();
+
+        document
+          .getElementById("classForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            formData.append("semester", semester);
+            formData.append("section", section);
+
+            fetch("save_class.php", {
+              method: "POST",
+              body: formData,
+            })
+              .then((res) => res.text())
+              .then((response) => {
+                if (response === "exists") {
+                  alert(
+                    "This time slot is already assigned for the selected semester and section."
+                  );
+                } else if (response === "faculty_exists") {
+                  alert(
+                    "This faculty is already assigned to another subject in this semester and section."
+                  );
+                } else if (response === "faculty_conflict") {
+                  alert(
+                    "This faculty is already assigned to a different class at the same time."
+                  );
+                } else if (response === "room_conflict") {
+                  alert(
+                    "This room is already assigned to another class at this time."
+                  );
+                } else if (response === "success") {
+                  alert("Class assigned successfully!");
+                  window.location.href = `hodCT1.html?semester=${semester}&section=${section}`;
+                } else {
+                  alert("Something went wrong.");
+                }
+              })
+
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Error saving class.");
+              });
+          });
+      };
+
+      function getQueryParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return {
+          semester: urlParams.get("semester"),
+          section: urlParams.get("section"),
+        };
+      }
+
+      function loadSubjects(semester) {
+        fetch(`fetch_subjects.php?semester=${semester}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const dropdown = document.getElementById("subject");
+            dropdown.innerHTML = '<option value="">Select Subject</option>';
+
+            data.forEach((subject) => {
+              const option = document.createElement("option");
+              option.value = subject;
+              option.textContent = subject;
+              dropdown.appendChild(option);
+            });
+          });
+      }
+      function loadFaculty() {
+        const { semester, section } = getQueryParams();
+        fetch(`fetch_faculty.php?semester=${semester}&section=${section}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const staff = document.getElementById("faculty");
+            staff.innerHTML = '<option value="">Select Faculty</option>'; // Reset
+
+            data.all.forEach((faculty) => {
+              const option = document.createElement("option");
+              option.value = faculty;
+
+              if (data.assigned.includes(faculty)) {
+                option.textContent = `${faculty} (Assigned)`;
+                option.dataset.assigned = "true";
+              } else {
+                option.textContent = faculty;
+                option.dataset.assigned = "false";
+              }
+
+              staff.appendChild(option);
+            });
+
+            // Add validation to block submission if assigned faculty is selected
+            document
+              .getElementById("classForm")
+              .addEventListener("submit", function (e) {
+                const selectedOption = staff.options[staff.selectedIndex];
+                if (selectedOption.dataset.assigned === "true") {
+                  e.preventDefault();
+                }
+              });
+          })
+          .catch((error) => console.error("Error loading faculties:", error));
+      }
+    </script>
+  </body>
+</html>

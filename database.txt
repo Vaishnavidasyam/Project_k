@@ -1,0 +1,111 @@
+signin:
+
+CREATE DATABASE signin;
+
+USE signin;
+
+CREATE TABLE admin (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE faculty (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    rollnumber VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+
+hod:
+
+CREATE TABLE class (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    day VARCHAR(20),
+    time VARCHAR(50),
+    subject VARCHAR(100),
+    faculty VARCHAR(100),
+    room VARCHAR(50),
+    semester VARCHAR(10),
+    section VARCHAR(10)
+);
+
+CREATE TABLE tt (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  semester VARCHAR(10),
+  section VARCHAR(20),
+  day VARCHAR(20),
+  time VARCHAR(20),
+  subject VARCHAR(50),
+  faculty VARCHAR(50),
+  room  VARCHAR(50),
+);
+
+CREATE TABLE subjects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_name VARCHAR(100),
+    semester VARCHAR(10),
+    section VARCHAR(10)
+);
+
+CREATE TABLE semester (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(10) NOT NULL UNIQUE
+);
+
+CREATE TABLE section (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(20) NOT NULL UNIQUE
+);
+
+INSERT INTO semester (name) VALUES
+('1-1'), ('1-2'), ('2-1'), ('2-2'),
+('3-1'), ('3-2'), ('4-1'), ('4-2');
+
+INSERT INTO section (name) VALUES
+('Regular'), ('IDP'), ('IDDMP');
+
+faculty:
+
+CREATE TABLE students (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  roll VARCHAR(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  semester VARCHAR(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  section VARCHAR(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  subject VARCHAR(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  faculty VARCHAR(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE attendance (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  roll VARCHAR(50) COLLATE utf8mb4_general_ci NOT NULL,
+  name VARCHAR(100) COLLATE utf8mb4_general_ci NOT NULL,
+  faculty VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL,
+  semester VARCHAR(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  section VARCHAR(10) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  subject VARCHAR(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  classes_attended INT(11) DEFAULT NULL,
+  total_classes INT(11) DEFAULT NULL,
+  percentage FLOAT GENERATED ALWAYS AS (
+    CASE 
+      WHEN total_classes > 0 THEN (classes_attended / total_classes) * 100
+      ELSE NULL
+    END
+  ) STORED,
+  PRIMARY KEY (id)
+);
+

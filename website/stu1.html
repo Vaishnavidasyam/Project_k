@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="styles9.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="stulogin.html">Logout</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1>Dashboard</h1>
+      <h2 id="welcomeMessage">Welcome, Student</h2>
+      <br /><br />
+
+      <div class="buttons">
+        <button class="btn" onclick="redirectToTimetable()">Timetable</button>
+        <button class="btn" onclick="redirectToAttendance()">Attendance</button>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("name");
+      const roll = params.get("rollnumber");
+
+      if (name) {
+        document.getElementById("welcomeMessage").textContent =
+          "Welcome, " + decodeURIComponent(name);
+      }
+
+      function redirectToTimetable() {
+        window.location.href = `stulog.html?name=${encodeURIComponent(
+          name
+        )}&rollnumber=${encodeURIComponent(roll)}`;
+      }
+
+      function redirectToAttendance() {
+        window.location.href = `stuatt.html?name=${encodeURIComponent(
+          name
+        )}&rollnumber=${encodeURIComponent(roll)}`;
+      }
+    </script>
+  </body>
+</html>
