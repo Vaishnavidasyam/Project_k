@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timetable Selection</title>
+    <link rel="stylesheet" href="styles6.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Logout</a>
+      </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+      <div class="form-box">
+        <h2>Select Details for Timetable</h2>
+        <form id="timetableForm">
+          <div class="form-group">
+            <label for="semester">Semester</label>
+            <select id="semester" required>
+              <option value="">Select semester</option>
+              <option value="1-1">1-1</option>
+              <option value="1-2">1-2</option>
+              <option value="2-1">2-1</option>
+              <option value="2-2">2-2</option>
+              <option value="3-1">3-1</option>
+              <option value="3-2">3-2</option>
+              <option value="4-1">4-1</option>
+              <option value="4-2">4-2</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="section">Section</label>
+            <select id="section" required>
+              <option value="">Select section</option>
+              <option value="Regular">Regular</option>
+              <option value="IDP">IDP</option>
+              <option value="IDDMP">IDDMP</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <select id="subject" required>
+              <option value="">Select Subject</option>
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+
+          <div class="button-group">
+            <button
+              type="button"
+              class="cancel-btn"
+              onclick="window.location.href='dashboard.html'"
+            >
+              Cancel <img src="cancel.png" alt="Cancel Icon" class="btn-icon" />
+            </button>
+            <button type="submit" class="next-btn">
+              Next <img src="signin.png" alt="Next Icon" class="btn-icon" />
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Function to get query parameters
+        function getQueryParam(param) {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(param);
+        }
+
+        const facultyName = getQueryParam("name");
+
+        // Load subjects assigned to the faculty
+        fetch(`get_subjects.php?name=${encodeURIComponent(facultyName)}`)
+          .then((response) => response.json())
+          .then((subjects) => {
+            const subjectSelect = document.getElementById("subject");
+            subjectSelect.innerHTML =
+              '<option value="">Select Subject</option>';
+
+            const uniqueSubjects = [];
+            subjects.forEach((entry) => {
+              if (!uniqueSubjects.includes(entry.subject)) {
+                uniqueSubjects.push(entry.subject);
+                const option = document.createElement("option");
+                option.value = entry.subject;
+                option.textContent = entry.subject;
+                subjectSelect.appendChild(option);
+              }
+            });
+          })
+          .catch((error) => {
+            console.error("Error loading subjects:", error);
+          });
+        document
+          .getElementById("timetableForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            const semester = document.getElementById("semester").value;
+            const section = document.getElementById("section").value;
+            const subject = document.getElementById("subject").value;
+
+            if (!semester || !section || !subject) {
+              alert("Please select all fields.");
+              return;
+            }
+
+            // Verify if this subject is actually assigned to the faculty for the given semester & section
+            fetch(`get_subjects.php?name=${encodeURIComponent(facultyName)}`)
+              .then((response) => response.json())
+              .then((data) => {
+                const match = data.find(
+                  (entry) =>
+                    entry.semester === semester &&
+                    entry.section === section &&
+                    entry.subject === subject
+                );
+
+                if (match) {
+                  // Store selections in localStorage
+                  localStorage.setItem("semester", semester);
+                  localStorage.setItem("section", section);
+                  localStorage.setItem("subject", subject);
+
+                  const encodedName = encodeURIComponent(facultyName);
+                  const encodedSemester = encodeURIComponent(semester);
+                  const encodedSection = encodeURIComponent(section);
+                  const encodedSubject = encodeURIComponent(subject);
+                  window.location.href = `staff3.html?name=${encodedName}&semester=${encodedSemester}&section=${encodedSection}&subject=${encodedSubject}`;
+                } else {
+                  alert(
+                    `${subject} is not assigned to you for ${semester} ${section}.`
+                  );
+                }
+              })
+              .catch((error) => {
+                console.error("Error verifying subject:", error);
+              });
+          });
+      });
+    </script>
+  </body>
+</html>
