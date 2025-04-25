@@ -1,0 +1,329 @@
+ 
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Faculty Sign Up</title>
+        <link rel="icon" href="pic.png" type="image/png" />
+        <link rel="stylesheet" href="styles3.css" />
+        <style>
+          /* Basic reset */
+          * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+          }
+          body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+          }
+          /* Header styling */
+          .header {
+            width: 100%;
+            padding: 10px 30px;
+            background-color: #4caf50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+          }
+          .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5em;
+          }
+          .logo img {
+            height: 40px;
+            margin-right: 10px;
+          }
+          .nav-links a {
+            margin-left: 20px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+          }
+          /* Main container to center the form */
+          .main-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+          }
+          /* Sign up container styling */
+          .login-container {
+            width: 100%;
+            max-width: 360px;
+            background-color: #ffffff;
+            padding: 30px 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+          }
+          .login-container h2 {
+            margin-bottom: 20px;
+          }
+          .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+          }
+          .input-group label {
+            display: block;
+            margin-bottom: 5px;
+          }
+          .input-group input,
+          .input-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          }
+          button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          button img {
+            height: 18px;
+            margin-left: 8px;
+          }
+          .already-registered {
+            margin-top: 15px;
+          }
+          .already-registered a {
+            text-decoration: none;
+            color: #4caf50;
+          }
+          /* Modal styling */
+          .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+          }
+          .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px 20px 40px;
+            border: 2px solid #4caf50;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: #333;
+            position: relative;
+          }
+          .modal-content h2 {
+            margin-top: 0;
+            color: #4caf50;
+          }
+          .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #000;
+            background: none;
+            border: none;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+          }
+        </style>
+        <script>
+          // Validate the sign-up form for Faculty Sign Up
+          function validateSignupForm(event) {
+            event.preventDefault(); // Prevent default form submission
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var department = document.getElementById("department").value;
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirm-password").value;
+    
+            // Check if any field is empty
+            if (
+              name === "" ||
+              email === "" ||
+              department === "" ||
+              password === "" ||
+              confirmPassword === ""
+            ) {
+              alert("Please fill in all the fields.");
+              return false;
+            }
+    
+            // Check if password and confirm password match
+            if (password !== confirmPassword) {
+              alert("Passwords do not match.");
+              return false;
+            }
+    
+            // If everything is okay, redirect to staff1.html (Dashboard)
+            window.location.href = "faclogin.html";
+            return false;
+          }          // Redirect to the Home page
+          function navigateToHome() {
+            window.location.href = "first.html";
+          }
+
+          // Show the modal popup for About or Contact
+          function showPopup(type) {
+            var modal = document.getElementById("modal");
+            var modalBody = document.getElementById("modal-body");
+            if (type === "about") {
+              modalBody.innerHTML = `
+            <h2>About This Website and Page</h2>
+            <p>
+              This University Timetable Management system streamlines timetable creation and management.
+              It helps organize class schedules and enhances the academic experience.
+              This page is designed for Faculty sign-up.
+            </p>
+          `;
+            } else if (type === "contact") {
+              modalBody.innerHTML = `
+            <h2>Contact Us</h2>
+            <p>
+              <strong>Email:</strong> shaikfayaz73822@gmail.com<br>
+              <strong>Phone:</strong> 7382259565<br>
+              <strong>Address:</strong> Kukatpally, Hyderabad, India<br>
+              <strong>Follow us:</strong> Facebook | Twitter | Instagram
+            </p>
+          `;
+            }
+            modal.style.display = "block";
+          }
+
+          // Close the modal popup
+          function closeModal() {
+            document.getElementById("modal").style.display = "none";
+          }
+
+          // Close modal when clicking outside the modal content
+          window.onclick = function (event) {
+            var modal = document.getElementById("modal");
+            if (event.target === modal) {
+              modal.style.display = "none";
+            }
+          };
+        </script>
+      </head>
+      <body>
+        <header class="header">
+          <div class="logo">
+            <img src="icon.png" alt="Logo Icon" class="logo-icon" />
+            <span>TimePrompt</span>
+          </div>
+          <nav class="nav-links">
+            <a href="#" onclick="navigateToHome()">Home</a>
+            <a href="#" onclick="showPopup('about')">About</a>
+            <a href="#" onclick="showPopup('contact')">Contact</a>
+          </nav>
+        </header>
+
+        <div class="main-container">
+          <div class="login-container">
+            <h2>FACULTY SIGN UP</h2>
+            <form
+              onsubmit="validateSignupForm(event)"
+              action="faculty_signup.php"
+              method="POST"
+            >
+              <div class="input-group">
+                <label for="name">Enter your full name:</label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  placeholder="Full Name"
+                  required
+                />
+              </div>
+
+              <div class="input-group">
+                <label for="email">Enter your email:</label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="Email"
+                  required
+                />
+              </div>
+
+              <div class="input-group">
+                <label for="department">Select your department:</label>
+                <select name="department" id="department" required>
+                  <option value="" disabled selected>Choose Department</option>
+                  <option value="cse">Computer Science & Engineering</option>
+                  <option value="ece">
+                    Electronics & Communication Engineering
+                  </option>
+                  <option value="eee">
+                    Electrical & Electronics Engineering
+                  </option>
+                  <option value="mech">Mechanical Engineering</option>
+                  <option value="civil">Civil Engineering</option>
+                  <option value="it">Information Technology</option>
+                </select>
+              </div>
+
+              <div class="input-group">
+                <label for="password">Create a password:</label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="Password"
+                  required
+                />
+              </div>
+
+              <div class="input-group">
+                <label for="confirm-password">Confirm your password:</label>
+                <input
+                  type="password"
+                  name="confirm-password"
+                  id="confirm-password"
+                  placeholder="Confirm Password"
+                  required
+                />
+              </div>
+
+              <button type="submit">
+                <span>Sign Up</span>
+                <img src="signin.png" alt="Sign In Icon" class="signin-image" />
+              </button>
+            </form>
+
+            <div class="already-registered">
+              <p>Already have an account? <a href="faclogin.html">Login</a></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Popup -->
+        <div id="modal" class="modal">
+          <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <div id="modal-body"></div>
+          </div>
+        </div>
+      </body>
+    </html>
+  </head>
+</html>
