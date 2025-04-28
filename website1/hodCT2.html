@@ -1,0 +1,207 @@
+<!-- assign_faculty.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assign Faculty to Subjects</title>
+    <link rel="stylesheet" href="styles7.css" />
+    <style>
+      /* …your existing CSS… */
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo" class="logo-icon" />
+        University Timetable
+      </div>
+      <nav class="nav-links">
+        <a href="first.html">Home</a>
+        <a onclick="showPopup('about')">About</a>
+        <a onclick="showPopup('contact')">Contact</a>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h2>Assign Faculty to Subjects</h2>
+      <table id="assignTable">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Faculty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- JS will inject rows here -->
+        </tbody>
+      </table>
+
+      <div class="buttons">
+        <button class="cancel-btn" onclick="goBack()">Back</button>
+        <button class="save-btn" onclick="saveAssignments()">Save</button>
+      </div>
+    </div>
+
+    <script>
+      let facultiesList = []; // global
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // 1) Load subjects → 2) load faculties → 3) load saved assignments
+        fetchSubjects()
+          .then(fetchFaculties)
+          .then(fetchAssignments)
+          .catch(console.error);
+      });
+
+      function fetchSubjects() {
+        const p = new URLSearchParams(location.search);
+        return fetch(
+          `fetch_subjects.php?semester=${p.get("semester")}&class=${p.get(
+            "class"
+          )}&department=${p.get("department")}&room=${p.get("room")}`
+        )
+          .then((r) => r.json())
+          .then((subjects) => {
+            const tbody = document.querySelector("#assignTable tbody");
+            subjects.forEach((subj) => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+              <td>${subj}</td>
+              <td class="faculty-assignment">
+                <select data-subject="${subj}">
+                  <option value="">Select Faculty</option>
+                </select>
+                <input type="checkbox" onchange="toggleAdditionalFaculty(this)">
+                <div class="additional-faculties" style="display:none;">
+                  <select>
+                    <option value="">Select Faculty</option>
+                  </select>
+                </div>
+              </td>`;
+              tbody.appendChild(tr);
+            });
+          });
+      }
+
+      function fetchFaculties() {
+        return fetch("get_faculties.php")
+          .then((r) => r.json())
+          .then((faculties) => {
+            facultiesList = faculties;
+            document.querySelectorAll("#assignTable select").forEach((sel) => {
+              // clear & populate
+              sel.innerHTML = '<option value="">Select Faculty</option>';
+              facultiesList.forEach((f) => {
+                const o = new Option(f, f);
+                sel.add(o);
+              });
+            });
+          });
+      }
+
+      function fetchAssignments() {
+        const p = new URLSearchParams(location.search);
+        return fetch(
+          `fetch_assignments.php?semester=${p.get("semester")}&class=${p.get(
+            "class"
+          )}&department=${p.get("department")}&room=${p.get("room")}`
+        )
+          .then((r) => r.json())
+          .then((assignments) => {
+            assignments.forEach((a) => {
+              const [first, second] = a.faculty.split(",");
+              const cell = document.querySelector(
+                `select[data-subject="${a.subject}"]`
+              );
+              if (!cell) return;
+
+              // 1st faculty
+              cell.value = first;
+              moveOptionToTop(cell, first);
+
+              // additional?
+              if (second) {
+                const cb = cell.parentElement.querySelector(
+                  "input[type=checkbox]"
+                );
+                const extraDiv = cell.parentElement.querySelector(
+                  ".additional-faculties"
+                );
+                const extraSel = extraDiv.querySelector("select");
+
+                cb.checked = true;
+                extraDiv.style.display = "block";
+                extraSel.value = second;
+                moveOptionToTop(extraSel, second);
+              }
+            });
+          });
+      }
+
+      function moveOptionToTop(selectElem, val) {
+        const opts = Array.from(selectElem.options);
+        const idx = opts.findIndex((o) => o.value === val);
+        if (idx > 1) {
+          const opt = opts[idx];
+          selectElem.remove(idx);
+          selectElem.add(opt, selectElem.options[1]);
+        }
+      }
+
+      function toggleAdditionalFaculty(cb) {
+        const div = cb.nextElementSibling;
+        if (cb.checked) div.style.display = "block";
+        else {
+          div.style.display = "none";
+          div.querySelector("select").value = "";
+        }
+      }
+
+      function saveAssignments() {
+        const p = new URLSearchParams(location.search);
+        const semester = p.get("semester"),
+          classValue = p.get("class"),
+          department = p.get("department"),
+          room = p.get("room");
+
+        const data = [];
+        document.querySelectorAll("#assignTable tbody tr").forEach((tr) => {
+          const subj = tr.cells[0].textContent;
+          const sel = tr.querySelector("select[data-subject]");
+          const cb = tr.querySelector("input[type=checkbox]");
+          const extraSel = tr.querySelector(".additional-faculties select");
+
+          let fac = sel.value;
+          if (!fac) return;
+          if (cb.checked && extraSel.value) {
+            fac += "," + extraSel.value;
+          }
+          data.push({
+            semester,
+            class: classValue,
+            department,
+            room,
+            subject: subj,
+            faculty: fac,
+          });
+        });
+
+        fetch("save_assignments.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then((r) => r.json())
+          .then((res) => {
+            alert(res.success ? "Saved successfully!" : "Failed to save.");
+          })
+          .catch((err) => console.error(err));
+      }
+
+      function goBack() {
+        location.href = `hodCT1.html${location.search}`;
+      }
+    </script>
+  </body>
+</html>
