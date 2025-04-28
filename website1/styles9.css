@@ -1,0 +1,141 @@
+/* Reset and Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Full-Width Header */
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 5%;
+  background: linear-gradient(90deg, #685dda, #4c45b2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+body {
+  background: linear-gradient(
+    90deg,
+    rgb(216, 220, 250) 0%,
+    hsla(0, 0%, 89%, 1) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.main-container {
+  width: 90%;
+  max-width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-top: 80px;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: white;
+}
+
+.logo-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  margin-right: 12px;
+  background-color: #fff;
+  padding: 5px;
+}
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-size: 1em;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.nav-links a:hover {
+  color: #f4e04d;
+}
+
+/* Main Dashboard Container */
+.container {
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+  background: white;
+  backdrop-filter: blur(15px);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: black;
+  margin-top: 80px;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+/* Button Container */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Stylish Buttons */
+.btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn:nth-child(1) {
+  background: linear-gradient(90deg, #4caf50, #45a049);
+  color: white;
+}
+
+.btn:nth-child(1):hover {
+  transform: scale(1.05);
+  box-shadow: 0px 6px 12px rgba(0, 255, 0, 0.5);
+}
+
+.btn:nth-child(2) {
+  background: linear-gradient(90deg, #008cba, #007bb5);
+  color: white;
+}
+
+.btn:nth-child(2):hover {
+  transform: scale(1.05);
+  box-shadow: 0px 6px 12px rgba(0, 174, 255, 0.5);
+}
