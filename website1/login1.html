@@ -1,0 +1,174 @@
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Login Page</title>
+      <link rel="icon" type="image/png" href="icon2.png" />
+      <link rel="stylesheet" href="styles2.css" />
+      <style>
+        /* Modal styling */
+        .modal {
+          display: none; /* Hidden by default */
+          position: fixed;
+          z-index: 100; /* Sit on top */
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+        }
+        .modal-content {
+          background-color: #fff;
+          margin: 10% auto; /* Center the modal */
+          padding: 20px;
+          border: 2px solid #4caf50; /* Accent border color */
+          width: 80%;
+          max-width: 500px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          font-family: Arial, sans-serif;
+          color: #333;
+        }
+        .modal-content h2 {
+          margin-top: 0;
+          color: #4caf50;
+        }
+        /* Close button styling: plain black X without background styling */
+        .close-btn {
+          color: #000;
+          background: none;
+          border: none;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+          cursor: pointer;
+        }
+      </style>
+      <script>
+        // Redirect to the Home page (first.html)
+        function navigateToHome() {
+          window.location.href = "first.html";
+        }
+
+        // Redirect to the respective login pages based on role
+        function navigateToLoginPage(role) {
+          if (role === "hod") {
+            window.location.href = "adlogin.html";
+          } else if (role === "staff") {
+            window.location.href = "faclogin.html";
+          } else if (role === "student") {
+            window.location.href = "stulogin.html";
+          }
+        }
+
+        // Show the modal popup with dynamic content for About and Contact
+        function showPopup(type) {
+          const modal = document.getElementById("modal");
+          const modalBody = document.getElementById("modal-body");
+          if (type === "about") {
+            modalBody.innerHTML = `
+              <h2>About This Website and Page</h2>
+              <p>
+                This University Timetable Management system streamlines timetable creation and management.
+                It helps in organizing class schedules and enhances the academic experience.
+                This page is designed for logining in, where users (HOD/Admin, Faculty, or Students) 
+                can quickly navigate to their respective areas.
+              </p>
+            `;
+          } else if (type === "contact") {
+            modalBody.innerHTML = `
+              <h2>Contact Us</h2>
+              <p>
+                <strong>Email:</strong> shaikfayaz73822@gmail.com<br>
+                <strong>Phone:</strong> 7382259565<br>
+                <strong>Address:</strong> Kukatpally, Hyderabad, India<br>
+                <strong>Follow us:</strong> Facebook | Twitter | Instagram
+              </p>
+            `;
+          }
+          modal.style.display = "block";
+        }
+
+        // Close the modal
+        function closeModal() {
+          document.getElementById("modal").style.display = "none";
+        }
+
+        // Close modal when clicking outside of the modal content
+        window.onclick = function (event) {
+          const modal = document.getElementById("modal");
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        };
+      </script>
+    </head>
+
+    <body>
+      <header class="header">
+        <div class="logo">
+          <img src="icon.png" alt="Logo Icon" class="logo-icon" />
+          <span>University Management System</span>
+        </div>
+        <nav class="nav-links">
+          <a href="#" onclick="navigateToHome()">Home</a>
+          <a href="#" onclick="showPopup('about')">About</a>
+          <a href="#" onclick="showPopup('contact')">Contact</a>
+        </nav>
+      </header>
+
+      <div class="container"> 
+        <h2> </h2>
+        <div class="profiles">
+          <div class="profile">
+            <img src="admin.jpg" alt="HOD / Admin" />
+            <div class="content">
+              <h2>HOD / Admin</h2>
+              <!-- Button-like link for HOD / Admin login -->
+              <a
+                href="#"
+                onclick="navigateToLoginPage('hod')"
+                class="btn btn-primary"
+              >
+                <img src="signin.png" alt="Signin Icon" />
+                Login
+              </a>
+            </div>
+          </div>
+          <div class="profile">
+            <img src="fac1.jpg" alt="Faculty" />
+            <div class="content">
+              <h2>Faculty</h2>
+              <!-- Button-like link for Faculty login -->
+              <a href="#" onclick="navigateToLoginPage('staff')" class="btn">
+                <img src="signin.png" alt="Signin Icon" />
+                Login
+              </a>
+            </div>
+          </div>
+          <div class="profile">
+            <img src="student.jpg" alt="Student" />
+            <div class="content">
+              <h2>Students</h2>
+              <!-- Button-like link for Student login -->
+              <a href="#" onclick="navigateToLoginPage('student')" class="btn">
+                <img src="signin.png" alt="Signin Icon" />
+                Login
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Popup Structure -->
+      <div id="modal" class="modal">
+        <div class="modal-content">
+          <button class="close-btn" onclick="closeModal()">&times;</button>
+          <div id="modal-body"></div>
+        </div>
+      </div>
+    </body>
+  </html>
+</html>

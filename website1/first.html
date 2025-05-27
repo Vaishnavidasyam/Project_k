@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>University Management System</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Favicon -->
+    <link rel="icon" href="icon.png" type="image/png" />
+    <style>
+      /* Custom styles for the hero section */
+      .hero-text p {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.2; /* reduced line spacing */
+        color: #333;
+      }
+      /* Add spacing between the Signin and Login buttons and paragraph */
+      .hero-buttons {
+        margin-top: 20px; /* More space between the paragraph and the buttons */
+      }
+      .hero-buttons button {
+        margin-right: 10px;
+      }
+      .hero-buttons button:last-child {
+        margin-right: 0;
+      }
+
+      /* Modal styling */
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 100; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+      }
+      .modal-content {
+        background-color: #fff;
+        margin: 10% auto; /* Center the modal */
+        padding: 20px;
+        border: 2px solid #4caf50; /* Accent border color */
+        width: 80%;
+        max-width: 500px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        font-family: Arial, sans-serif;
+        color: #333;
+      }
+      .modal-content h2 {
+        margin-top: 0;
+        color: #4caf50;
+      }
+      /* Updated close button styling: Plain black text without any background */
+      .close-btn {
+        color: #000;
+        background: none;
+        border: none;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+    </style>
+    <script>
+      // Function to redirect to signin and login pages
+      function navigateToPage(page) {
+        if (page === "signin") {
+          window.location.href = "signin1.html"; // Redirect to Signin (Signup) page
+        } else if (page === "login") {
+          window.location.href = "login1.html"; // Redirect to Login page
+        }
+      }
+
+      // Function to show the modal popup with dynamic content
+      function showPopup(type) {
+        const modal = document.getElementById("modal");
+        const modalBody = document.getElementById("modal-body");
+        if (type === "about") {
+          modalBody.innerHTML = `
+            <h2>About This Website</h2>
+            <p>
+              TimeTable Management System simplifies the process of timetable creation and 
+              enhances the overall academic experience for students and faculty. This page 
+              serves as the starting interface with navigation and authentication features.
+            </p>
+          `;
+        } else if (type === "contact") {
+          modalBody.innerHTML = `
+            <h2>Contact Us</h2>
+            <p>
+              <strong>Email:</strong> shaikfayaz73822@gmail.com<br>
+              <strong>Phone:</strong> 7382259565<br>
+              <strong>Address:</strong> Kukatpally, Hyderabad, India<br>
+              <strong>Follow us:</strong> Facebook | Twitter | Instagram
+            </p>
+          `;
+        }
+        modal.style.display = "block";
+      }
+
+      // Function to close the modal
+      function closeModal() {
+        document.getElementById("modal").style.display = "none";
+      }
+
+      // Close modal when clicking outside of the modal content
+      window.onclick = function (event) {
+        const modal = document.getElementById("modal");
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <!-- Header Section -->
+    <header class="header">
+      <div class="logo">
+        <img src="icon.png" alt="Logo Icon" class="logo-icon" />
+        <span>University Management System </span>
+      </div>
+      <nav class="nav-links">
+        <!-- Removed Home button -->
+        <a href="#" onclick="showPopup('about')">About</a>
+        <a href="#" onclick="showPopup('contact')">Contact</a>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-image"></div>
+      <div class="hero-text">
+        <h1>
+          TimeTable <br />
+          Management
+        </h1>
+        <p>
+          Time Table Management System simplifies the process of timetable
+          creation and enhances the overall academic experience for students and
+          faculty.
+        </p>
+        <div class="hero-buttons">
+          <!-- Signin and Login buttons using JavaScript -->
+          <button class="btn btn-primary" onclick="navigateToPage('signin')">
+            Signup
+          </button>
+          <button class="btn" onclick="navigateToPage('login')">Login</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal Popup Structure -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+
+    <!-- Footer Section -->
+  </body>
+</html>
