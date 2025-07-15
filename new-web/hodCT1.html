@@ -16,14 +16,17 @@
 }
 .back,
 .add-btn,
-.save-btn {
+.save-btn,.start-semester-btn,
+.end-semester-btn {
   background: gray; /* ensure all primary buttons are gray */
   color: white;
 }
 
 .back:hover,
 .add-btn:hover,
-.save-btn:hover {
+.save-btn:hover,
+.start-semester-btn:hover,
+.end-semester-btn:hover {
   background: #555;
 }
 
@@ -47,7 +50,8 @@ body {
   align-items: center;
   padding: 15px 5%;
   background: gray;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 /* Logo Styling */
@@ -61,11 +65,6 @@ body {
   margin-right: 10px;
   background: none;
 }
-
-
-
- 
-
 
 /* Navigation Links */
 .nav-links {
@@ -232,15 +231,55 @@ h3 {
 .menu-btn:hover {
   background-color: #eaeaea; /* hover effect */
 }
+#semesterStartNotice {
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: darkgreen;
+  margin: 15px 0;
+}
 
 /* Container */
 .container {
+  position: relative;
   max-width: 1200px;
   margin: 40px auto;
   padding: 30px;
   background-color: #ffffff;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+/* Semester control buttons */
+.start-semester-btn,
+.end-semester-btn {
+  background: gray;
+  color: #fff;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.start-semester-btn:hover,
+.end-semester-btn:hover {
+  background: #686868;
+}
+
+/* exact placement */
+.start-semester-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.end-semester-btn {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* Title */
@@ -429,6 +468,7 @@ td input[type="checkbox"] {
       </div>
 
     <div class="container">
+
       <!-- Menu -->
       <div class="menu-container">
         <button class="menu-toggle" onclick="toggleMenu()">☰</button>
@@ -443,8 +483,13 @@ td input[type="checkbox"] {
           <button class="menu-btn" onclick="goToCT4()">𝑨𝒅𝒅 𝑺𝒕𝒖𝒅𝒆𝒏𝒕𝒔</button>
         </div>
       </div>
+      <button class="start-semester-btn" onclick="startSemester()">
+  Start Semester
+</button>
 
       <h2>𝑴𝒂𝒏𝒂𝒈𝒆 𝑻𝒊𝒎𝒆𝒕𝒂𝒃𝒍𝒆</h2>
+      <div id="semesterStartNotice" style="text-align: center; font-weight: 500; font-size: 1.1rem; color: rgb(0, 0, 0); margin: 15px 0;">Semester Commences from: </div>
+
       <div id="semesterSection">
         𝑪𝒍𝒂𝒔𝒔: <span id="class"></span> | 𝑺𝒆𝒄𝒕𝒊𝒐𝒏: <span id="section"></span>
       </div>
@@ -655,6 +700,9 @@ td input[type="checkbox"] {
       <div class="footer">
         <button onclick="window.history.back()">   <img src="backs.png" alt="Back" class="btn-icon" />𝑩𝒂𝒄𝒌</button>
         <button onclick="saveTimetable()"> <img src="save.png" alt="Save" class="btn-icon" />𝑺𝒂𝒗𝒆 𝑻𝒊𝒎𝒆𝒕𝒂𝒃𝒍𝒆</button>
+        <button class="end-semester-btn" onclick="endSemester()">
+  End Semester
+</button>
       </div>
     </div>
 
@@ -706,7 +754,93 @@ td input[type="checkbox"] {
           selectElem.remove(idx);
           selectElem.add(opt, selectElem.options[1]);
         }
+      }// Function to start the semester and save the start date
+      function endSemester() {
+  const qp = getQueryParams();
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2, '0');
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const yyyy = now.getFullYear();
+  const isoDate = `${yyyy}-${mm}-${dd}`;
+
+  if (!confirm("Are you sure you want to end the semester? This will clear timetable and subject data.")) return;
+
+  fetch("save_semester_date.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      semester: qp.semester,
+      class: qp.class,
+      room: qp.room,
+      department: qp.department,
+      type: "end",
+      date: isoDate
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        alert("Semester ended and data reset successfully!");
+        location.reload(); // 🔄 Refresh the page to reflect changes
+      } else {
+        alert("Error ending semester: " + data.message);
       }
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("An unexpected error occurred.");
+    });
+}
+
+function startSemester() {
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2, '0');
+  const mm = String(now.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+  const yyyy = now.getFullYear();
+
+  const formattedDate = `${dd}/${mm}/${yyyy}`;      // For display
+  const isoDate = `${yyyy}-${mm}-${dd}`;            // For MySQL
+
+  const notice = document.getElementById("semesterStartNotice");
+  notice.textContent = `Semester Commencement From: ${formattedDate}`;
+
+  const qp = getQueryParams();
+
+  // Save start date to database
+  fetch("save_semester_date.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      semester: qp.semester,
+      class: qp.class,
+      room: qp.room,
+      department: qp.department,
+      type: "start",
+      date: isoDate
+    })
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status !== "success") {
+        alert("Error saving date: " + data.message);
+      }
+    })
+    .catch(console.error);
+}
+// Inside DOMContentLoaded block
+const qp = getQueryParams();
+
+fetch(`get_semester_dates.php?${new URLSearchParams(qp)}`)
+  .then((res) => res.json())
+  .then((data) => {
+    if (data.status === "success" && data.start_date) {
+      const notice = document.getElementById("semesterStartNotice");
+      const [yyyy, mm, dd] = data.start_date.split("-");
+      const formatted = `${dd}/${mm}/${yyyy}`;
+      notice.textContent = `Semester Commencement From: ${formatted}`;
+    }
+  })
+  .catch(console.error);
 
       // Setup two-section checkbox logic
       function setupTwoSectionCheckboxes() {
@@ -886,7 +1020,7 @@ td input[type="checkbox"] {
       }
       window.onclick = (e) => {
         if (e.target.classList.contains("popup-overlay"))
-          e.target.style.display = "nil";
+          e.target.style.display = "none";
       };
 
       // Initialize

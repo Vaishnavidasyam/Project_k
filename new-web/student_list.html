@@ -342,24 +342,36 @@
 
       function insertRow(name, roll) {
         const studentBody = document.getElementById("studentBody");
+
+        // ✅ Remove "No students found" row if present
+        // Clear placeholder or empty table
+        if (
+          studentBody.children.length === 0 ||
+          (studentBody.children.length === 1 &&
+            studentBody.children[0].children[0].colSpan === 4)
+        ) {
+          studentBody.innerHTML = "";
+        }
+
         const rows = studentBody.querySelectorAll("tr");
         const serial = rows.length + 1;
+
         const row = document.createElement("tr");
         row.innerHTML = `
-      <td>${serial}</td>
-      <td>${name}</td>
-      <td>${roll}</td>
-      <td><button class="delete-btn">Delete</button></td>
-    `;
+              <td>${serial}</td>
+              <td>${name}</td>
+              <td>${roll}</td>
+              <td><button class="delete-btn">Delete</button></td>
+            `;
 
-        // Delete handler
+        // Delete logic
         row.querySelector(".delete-btn").addEventListener("click", () => {
           if (!confirm("Are you sure you want to delete this student?")) return;
           deleteStudentFromDatabase(roll)
             .then((data) => {
               if (data.success) {
                 row.remove();
-                currentStudentCount--; // Decrement count
+                currentStudentCount--;
                 updateAddButtonState();
                 sortAndRenumber();
               } else {
@@ -384,15 +396,22 @@
           studentBody.appendChild(r);
         });
       }
-
       function isDuplicate(roll) {
-        return Array.from(document.querySelectorAll("#studentBody tr")).some(
-          (row) => row.cells[2].innerText === roll
-        );
+        const table = document.getElementById("studentTable");
+        const rows = table?.getElementsByTagName("tr") || [];
+
+        return Array.from(rows).some((row) => {
+          if (row.cells && row.cells[1]) {
+            return row.cells[1].innerText.trim() === roll.trim();
+          }
+          return false;
+        });
       }
 
       function addStudentToDatabase(name, roll) {
         const qp = getQueryParams();
+        console.log("Sending to add_student.php:", { name, roll, ...qp }); // ✅ DEBUG LOG
+
         return fetch("add_student.php", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -466,10 +485,10 @@
           addModal.style.display = "flex";
         });
 
-        closeModalBtn.addEventListener(
-          "click",
-          () => (addModal.style.display = "none")
-        );
+        closeModalBtn.addEventListener("click", () => {
+          addModal.style.display = "none";
+        });
+
         window.addEventListener("click", (e) => {
           if (e.target === addModal) addModal.style.display = "none";
         });
@@ -493,8 +512,12 @@
             return;
           }
 
+          console.log("Query Params:", getQueryParams());
+
           addStudentToDatabase(name, roll)
             .then((data) => {
+              console.log("Response from PHP:", data);
+
               if (data.success) {
                 warning.style.display = "none";
                 insertRow(name, roll);
@@ -505,18 +528,72 @@
                 document.getElementById("studentRoll").value = "";
                 addModal.style.display = "none";
               } else {
-                alert("Error: " + data.error);
+                warning.style.display = "block";
+                warning.innerText = "⚠ " + data.error;
+                alert("PHP Error: " + data.error);
               }
             })
-            .catch(console.error);
+            .catch((err) => {
+              console.error("Network error:", err);
+              alert("Network Error: Could not contact server.");
+            });
         });
 
+        // ✅ Correct placement
         fetchStudentData();
       });
 
+      // ✅ Define this outside the DOMContentLoaded block
       function saveAttendance() {
         alert("Student list saved!");
       }
+      async function fetchRoomAndStudents() {
+        const qp = getQueryParams();
+
+        const res = await fetch(
+          `get_room_from_log.php?semester=${qp.semester}&class=${qp.class}`
+        );
+        const data = await res.json();
+
+        if (!data.room) {
+          alert("⚠ Room not assigned yet for this semester and class.");
+          return;
+        }
+
+        // Update query param so other functions use correct room
+        qp.room = data.room;
+
+        // ✅ Update students table if their room is empty
+        await fetch("update_student_room.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            semester: qp.semester,
+            class: qp.class,
+            department: qp.department,
+            room: data.room,
+          }),
+        });
+
+        // ✅ Now fetch students
+        fetch(
+          `attendance.php?semester=${qp.semester}&class=${qp.class}&room=${qp.room}&department=${qp.department}`
+        )
+          .then((r) => r.json())
+          .then((data) => {
+            const body = document.getElementById("studentBody");
+            body.innerHTML = "";
+            if (data.students?.length) {
+              currentStudentCount = data.students.length;
+              data.students.forEach((s) => insertRow(s.name, s.roll));
+            } else {
+              currentStudentCount = 0;
+              body.innerHTML = `<tr><td colspan="4">No students found</td></tr>`;
+            }
+            updateAddButtonState();
+          });
+      }
+      fetchRoomAndStudents();
     </script>
   </body>
 </html>

@@ -10,7 +10,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
+ 
 // Get POST data
 $name = $_POST['name'];
 $roll = $_POST['roll'];
@@ -34,11 +34,16 @@ if ($stmt = $conn->prepare($sql)) {
     $stmt->bind_param("ssssss", $name, $roll, $semester, $class, $room, $department);
 
     // Execute the query
-    if ($stmt->execute()) {
-        echo json_encode(['success' => true]);
+   if ($stmt->execute()) {
+    echo json_encode(['success' => true]);
+} else {
+    if ($stmt->errno == 1062) {
+        // Duplicate entry error
+        echo json_encode(['success' => false, 'error' => 'Duplicate entry: Student already exists']);
     } else {
         echo json_encode(['success' => false, 'error' => 'Error: ' . $stmt->error]);
     }
+}
 
     // Close the statement
     $stmt->close();
