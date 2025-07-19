@@ -2,9 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Sign Up</title>
- 
+    <link rel="icon" href="pic.png" type="image/png" />
+
     <style>
       * {
         box-sizing: border-box;
@@ -13,7 +14,7 @@
       }
       body {
         font-family: Arial, sans-serif;
-        background: url('back.jpg') no-repeat center center fixed;
+        background: url("back.jpg") no-repeat center center fixed;
         background-size: cover;
         overflow: hidden;
         min-height: 100vh;
@@ -165,6 +166,28 @@
         font-weight: bold;
         cursor: pointer;
       }
+      .modal-content {
+        background-color: #f7f7f7; /* light gray */
+        margin: 10% auto;
+        padding: 30px 30px 40px;
+        border: 1px solid #ccc;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 10px;
+        position: relative;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        font-size: 26px;
+        color: #444;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -191,22 +214,42 @@
         >
           <div class="input-group">
             <label for="name"> 𝑬𝒏𝒕𝒆𝒓 𝑭𝒖𝒍𝒍 𝑵𝒂𝒎𝒆</label>
-            <input type="text" name="name" id="name" placeholder="Your name" required />
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Your name"
+              required
+            />
           </div>
           <div class="input-group">
             <label for="rollnumber">𝑬𝒏𝒕𝒆𝒓 𝑹𝒐𝒍𝒍 𝑵𝒖𝒎𝒃𝒆𝒓</label>
-            <input type="text" name="rollnumber" id="rollnumber" placeholder="Roll Number" required />
+            <input
+              type="text"
+              name="rollnumber"
+              id="rollnumber"
+              placeholder="Roll Number"
+              required
+            />
           </div>
           <div class="input-group full-width">
             <label for="email">𝑬𝒏𝒕𝒆𝒓 𝒚𝒐𝒖𝒓 𝑬𝒎𝒂𝒊𝒍</label>
-            <input type="email" name="email" id="email" placeholder="Email" required />
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Email"
+              required
+            />
           </div>
           <div class="input-group full-width">
             <label for="department">𝑺𝒆𝒍𝒆𝒄𝒕 𝒀𝒐𝒖𝒓 𝑫𝒆𝒑𝒂𝒓𝒕𝒎𝒆𝒏𝒕</label>
             <select name="department" id="department" required>
               <option value="" disabled selected>Choose Department</option>
               <option value="cse">Computer Science & Engineering</option>
-              <option value="ece">Electronics & Communication Engineering</option>
+              <option value="ece">
+                Electronics & Communication Engineering
+              </option>
               <option value="eee">Electrical & Electronics Engineering</option>
               <option value="mech">Mechanical Engineering</option>
               <option value="civil">Civil Engineering</option>
@@ -215,11 +258,23 @@
           </div>
           <div class="input-group">
             <label for="password">𝑬𝒏𝒕𝒆𝒓 𝑷𝒂𝒔𝒔𝒘𝒐𝒓𝒅</label>
-            <input type="password" name="password" id="password" placeholder="Password" required />
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Password"
+              required
+            />
           </div>
           <div class="input-group">
             <label for="confirm_password">𝑪𝒐𝒏𝒇𝒊𝒓𝒎 𝑷𝒂𝒔𝒔𝒘𝒐𝒓𝒅</label>
-            <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required />
+            <input
+              type="password"
+              name="confirm_password"
+              id="confirm_password"
+              placeholder="Confirm Password"
+              required
+            />
           </div>
           <button type="submit">
             <span>𝑺𝒊𝒈𝒏 𝑼𝒑</span>
@@ -281,7 +336,7 @@
               <strong>𝑨𝒅𝒅𝒓𝒆𝒔𝒔:</strong> 𝑲𝒖𝒌𝒂𝒕𝒑𝒂𝒍𝒍𝒚, 𝑯𝒚𝒅𝒆𝒓𝒂𝒃𝒂𝒅, 𝑰𝒏𝒅𝒊𝒂<br>
               <strong>𝑭𝒐𝒍𝒍𝒐𝒘 𝒖𝒔:</strong> 𝑭𝒂𝒄𝒆𝒃𝒐𝒐𝒌 | 𝑻𝒘𝒊𝒕𝒕𝒆𝒓 | 𝑰𝒏𝒔𝒕𝒂𝒈𝒓𝒂𝒎
             </p>
-          `; 
+          `;
         }
         modal.style.display = "block";
       }

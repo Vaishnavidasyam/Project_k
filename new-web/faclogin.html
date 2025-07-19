@@ -93,15 +93,37 @@
         height: 18px;
         margin-left: 8px;
       }
+      .modal-content {
+        background-color: #f7f7f7; /* light gray */
+        margin: 10% auto;
+        padding: 30px 30px 40px;
+        border: 1px solid #ccc;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 10px;
+        position: relative;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        font-size: 26px;
+        color: #444;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+
       .forgot-password {
-        margin-top: 15px;
+        margin-top: 20px;
       }
       .forgot-password a {
         color: gray;
         text-decoration: none;
       }
-
-      /* Modal Styling */
+      /* Modal styling */
       .modal {
         display: none;
         position: fixed;
@@ -117,7 +139,7 @@
         background-color: #fff;
         margin: 10% auto;
         padding: 20px 20px 40px;
-        border: 2px solid gray;
+        border: 2px solid #555;
         width: 80%;
         max-width: 500px;
         border-radius: 8px;
@@ -127,7 +149,18 @@
       }
       .modal-content h2 {
         margin-top: 0;
-        color: #28a745;
+        color: #555;
+      }
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #000;
+        background: none;
+        border: none;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -177,7 +210,9 @@
         </form>
 
         <div class="forgot-password">
-          <a href="#">𝑭𝒐𝒓𝒈𝒐𝒕 𝑷𝒂𝒔𝒔𝒘𝒐𝒓𝒅?</a>
+          <a href="#" onclick="openForgotPassword('faculty')"
+            >𝑭𝒐𝒓𝒈𝒐𝒕 𝑷𝒂𝒔𝒔𝒘𝒐𝒓𝒅?</a
+          >
         </div>
       </div>
     </div>
@@ -186,6 +221,49 @@
     <div id="modal" class="modal" onclick="closeModal(event)">
       <div class="modal-content" onclick="event.stopPropagation()">
         <div id="modal-body"></div>
+      </div>
+    </div>
+    <!-- Improved Forgot Password Modal -->
+    <div id="forgotModal" class="modal">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-btn" onclick="closeForgotModal()">&times;</button>
+        <h2>𝑭𝒐𝒓𝒈𝒐𝒕 𝑷𝒂𝒔𝒔𝒘𝒐𝒓𝒅</h2>
+        <form
+          method="POST"
+          action="forgot-password.php"
+          style="margin-top: 20px"
+        >
+          <input type="hidden" name="role" id="userRole" />
+          <label for="forgotEmail" style="display: block; margin-bottom: 8px"
+            >Enter your registered email:</label
+          >
+          <input
+            type="email"
+            id="forgotEmail"
+            name="email"
+            required
+            style="
+              width: 100%;
+              padding: 10px;
+              border-radius: 6px;
+              border: 1px solid #ccc;
+              margin-bottom: 20px;
+            "
+          />
+          <button
+            type="submit"
+            style="
+              background-color: gray;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 6px;
+              cursor: pointer;
+            "
+          >
+            Send Password
+          </button>
+        </form>
       </div>
     </div>
 
@@ -222,6 +300,19 @@
 
       function closeModal(event) {
         document.getElementById("modal").style.display = "none";
+      }
+      function closeForgotModal() {
+        document.getElementById("forgotModal").style.display = "none";
+      }
+      window.onclick = function (event) {
+        const modal = document.getElementById("modal");
+        const forgotModal = document.getElementById("forgotModal");
+        if (event.target === modal) modal.style.display = "none";
+        if (event.target === forgotModal) forgotModal.style.display = "none";
+      };
+      function openForgotPassword(role) {
+        document.getElementById("userRole").value = role;
+        document.getElementById("forgotModal").style.display = "block";
       }
     </script>
   </body>
