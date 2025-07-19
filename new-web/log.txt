@@ -1,3 +1,0 @@
----- REQUEST START ----
-Raw POST: name=hi&roll=2301MB501&semester=1-1&class=IDP&room=204&department=cse
-Parsed POST: {"name":"hi","roll":"2301MB501","semester":"1-1","class":"IDP","room":"204","department":"cse"}
